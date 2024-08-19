@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <style>
+        div {
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Convert file input to Blob</h1>
+    <div>
+        <label for="load-file">Load a file:</label>
+        <input type="file" id="load-file" accept=".mdp">
+    </div>
+    </div>
+    <div>
+        <label for="file-type">File type: </label>
+        <input type="text" id="file-type" value="image/png">
+    </div>
+    <div>
+        <button type="button" id="done-button">Convert to Blob (look in the console)</button>
+    </div>
+
+    <script src="https://unpkg.com/blob-util@2.0.2/dist/blob-util.js"></script>
+    <script>
+        var $ = document.querySelector.bind(document)
+        $('#done-button').addEventListener('click', function (e) {
+            var file = $('#load-file').files[0];
+            var fileReader = new FileReader();
+            fileReader.onloadend = function (e) {
+                var arrayBuffer = e.target.result;
+                var fileType = $('#file-type').value;
+                var blob = blobUtil.arrayBufferToBlob(arrayBuffer, fileType)
+                console.log('here is a blob', blob);
+                console.log('its size is', blob.size);
+                console.log('its type is', blob.type);
+            };
+            fileReader.readAsArrayBuffer(file);
+        });
+    </script>
+</body>
+
+</html>
