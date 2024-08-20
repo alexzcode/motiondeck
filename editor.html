@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <script src="jquery-3.7.1.min.js"></script>
-    <script src="bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/BrowserFS/2.0.0/browserfs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jszip/dist/jszip.min.js"></script>
@@ -46,7 +45,8 @@
                 <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <input type="file" id="uploadInput" class="nav-link" href="#" style="display: none;">
+                            <input type="file" id="uploadInput" class="nav-link" href="#"
+                                style="display: none; width:0;height:0;">
                             <label for="uploadInput" style="cursor: pointer; margin-bottom: 0; margin-top: 10px;"><span
                                     class="icn">upload</span></label>
                         </li>
@@ -59,20 +59,22 @@
                             <a class="nav-link" id="titleBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">title</span></a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" id="imgBtn" style="cursor: pointer; margin-top: 2px;"><span
-                                    class="icn">image</span></a>
+                        <li class="nav-item active" style="align-items:center;">
+                            <input type="file" id="imageInput" class="nav-link" href="#" style="display: none;"
+                                accept=".png,.jpg,.jpeg,.bmp">
+                            <label for="imageInput" style="cursor: pointer; margin-bottom: 0; margin-top: 10px;"><span
+                                    class="icn">image</span></label>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" id="squareBtn" style="cursor: pointer; margin-top: 2px;"><span
-                                    class="icn">crop_square</span></a>
+                                    class="icn">square</span></a>
                         </li>
-                        <li class="nav-item active">
+                        <li class="nav-item active" style="width: 16px;">
                             <a class="nav-link" id="circleBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">circle</span></a>
                         </li>
                         <div style="margin-right: 10px;"></div>
-                        <li class="nav-item active">
+                        <li class="nav-item active" style="margin-left: 10px;">
                             <a class="nav-link" id="animBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">animation</span></a>
                         </li>
@@ -80,7 +82,8 @@
                 </div>
             </nav>
             <section id="editor" class="container bg-light" style="height: 480px; padding: 0;">
-                skibidi
+                <canvas id="canvas" width="1100" height="480">
+                </canvas>
             </section>
             <script src="editor.js"></script>
             <br>
@@ -90,6 +93,7 @@
             <p>MotionDeck is not affiliated with MCM Technology's software of the same name.</p>
         </footer>
     </div>
+    <script src="bootstrap.min.js"></script>
 </body>
 
 </html>
