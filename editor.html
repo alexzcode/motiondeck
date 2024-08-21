@@ -41,8 +41,6 @@
         <main>
             <br>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <input type="file" id="imageInput" class="nav-link" href="#" style="display: none; padding: 0;"
-                    accept=".png,.jpg,.jpeg,.bmp">
                 <input type="file" id="uploadInput" class="nav-link" href="#" style="display: none; width:0;height:0;">
                 <span class="navbar-brand mb-0 h1">Editor</span>
                 <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
@@ -63,13 +61,12 @@
                                     class="icn">title</span></a>
                         </li>
                         <li class="nav-item active" style="align-items:center;">
-                            <label for="imageInput"
-                                style="cursor: pointer; margin-bottom: 0; margin-top: 10px; width: 16px; padding-left: 10px;"><span
-                                    class="icn">image</span></label>
+                            <a class="nav-link" id="imgBtn" data-toggle="modal" data-target="#imgModal"
+                                style="cursor: pointer; margin-top: 2px; padding-right: 0;"><span
+                                    class="icn">image</span></a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" id="squareBtn"
-                                style="cursor: pointer; margin-top: 2px; margin-left: 10px;"><span
+                            <a class="nav-link" id="squareBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">square</span></a>
                         </li>
                         <li class="nav-item active" style="width: 16px; height: 44px;">
@@ -90,6 +87,26 @@
                 <canvas id="canvas" width="1100" height="480">
                 </canvas>
             </section>
+            <div class="modal fade" id="imgModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Inesrt Image</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" id="urlInput" placeholder="Enter URL">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                id="urlConfirm">Insert</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <script src="editor.js"></script>
             <br>
         </main>
