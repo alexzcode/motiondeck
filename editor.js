@@ -39,8 +39,10 @@ const ctx = canvas.getContext("2d");
     t = type (square, circle)
 */
 var objects = [];
+var selected = null;
 function newSquare() {
     var dragging = false;
+    var handleDragging = false;
     var i = 0;
     objects.forEach(() => {
         i++;
@@ -52,11 +54,33 @@ function newSquare() {
         const rect = canvas.getBoundingClientRect();
         const mouseX = event.clientX - rect.left;
         const mouseY = event.clientY - rect.top;
-        if (mouseX >= objects[i].x && mouseX <= objects[i].x+objects[i].w && mouseY >= objects[i].y && mouseY <= objects[i].y+objects[i].h) {
-            dragging = true;
-            objects[i].x = mouseX-(objects[i].w/2);
-            objects[i].y = mouseY-(objects[i].h/2);
+        if (objects[i] && mouseX >= objects[i].x && mouseX <= objects[i].x+objects[i].w && mouseY >= objects[i].y && mouseY <= objects[i].y+objects[i].h) {
+            if (i === objects.length-1) {
+                dragging = true;
+                selected = i;
+                objects[i].x = mouseX - (objects[i].w/2);
+                objects[i].y = mouseY - (objects[i].h/2);
+            } else {
+                var tempObjects = [...objects];
+                tempObjects.splice(i, 1);
+                dragging = true;
+                tempObjects.forEach((obj) => {
+                    if (mouseX >= obj.x && mouseX <= obj.x+obj.w && mouseY >= obj.y && mouseY <= obj.y+obj.h) {
+                        dragging = false;
+                        console.log("nope- do not.");
+                        console.log(obj.x, obj.y, obj.w, obj.h);
+                    }
+                });
+                if (dragging===true) {
+                    selected = i;
+                    objects[i].x = mouseX - (objects[i].w/2);
+                    objects[i].y = mouseY - (objects[i].h/2);
+                }
+            }
+        } else if (mouseX >= objects[i].x + objects[i].w - 10 && mouseX <= objects[i].x + objects[i].w && mouseY >= objects[i].y + objects[i].h - 10 && mouseY <= objects[i].y + objects[i].h && selected === i) {
+            handleDragging = true;
         }
+        
         canvas.addEventListener("mousemove", (event) => {
             if (dragging) {
                 objects[i].x = event.clientX - rect.left - objects[i].w/2;
@@ -64,29 +88,233 @@ function newSquare() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = objects[i].c;
                 ctx.fillRect(objects[i].x, objects[i].y, objects[i].w, objects[i].h);
+                objects.forEach((obj) => {
+                    if (obj.t === "square") {
+                        ctx.fillStyle = obj.c;
+                        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                    } else if (obj.t === "circle") {
+                        ctx.fillStyle = obj.c;
+                        ctx.beginPath();
+                        ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = "blue";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+
+                    ctx.fillStyle = "blue";
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+                console.log(i ,objects[i].x, objects[i].y);
+            } else if (handleDragging) {
+                objects[i].w = event.clientX - rect.left - objects[i].x;
+                objects[i].h = event.clientY - rect.top - objects[i].y;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = objects[i].c;
+                ctx.fillRect(objects[i].x, objects[i].y, objects[i].w, objects[i].h);
+                objects.forEach((obj) => {
+                    if (obj.t === "square") {
+                        ctx.fillStyle = obj.c;
+                        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                    } else if (obj.t === "circle") {
+                        ctx.fillStyle = obj.c;
+                        ctx.beginPath();
+                        ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = "blue";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+
+                    ctx.fillStyle = "blue";
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+            }
+        });
+        canvas.addEventListener("mouseup", () => {
+            if (dragging) {
+                dragging = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                objects.forEach((obj) => {
+                    if (obj.t === "square") {
+                        ctx.fillStyle = obj.c;
+                        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                    } else if (obj.t === "circle") {
+                        ctx.fillStyle = obj.c;
+                        ctx.beginPath();
+                        ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = "blue";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+
+                    ctx.fillStyle = "blue";
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+            }
+        });
+    });
+}
+function newCircle() {
+    var dragging = false;
+    var i = 0;
+    objects.forEach(() => {
+        i++;
+    });
+    objects.push({x: 10, y: 10, w: 100, h: 100, c: "blue", t: "circle"});
+    ctx.fillStyle = objects[i].c;
+    ctx.beginPath();
+    ctx.arc(objects[i].x + objects[i].w/2, objects[i].y + objects[i].h/2, objects[i].w/2, 0, 2*Math.PI);
+    ctx.fill();
+    canvas.addEventListener("mousedown", (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+        if (objects[i] && mouseX >= objects[i].x && mouseX <= objects[i].x+objects[i].w && mouseY >= objects[i].y && mouseY <= objects[i].y+objects[i].h) {
+            if (i === objects.length-1) {
+                dragging = true;
+                selected = i;
+                objects[i].x = mouseX - (objects[i].w/2);
+                objects[i].y = mouseY - (objects[i].h/2);
+            } else {
+                var tempObjects = [...objects];
+                tempObjects.splice(i, 1);
+                dragging = true;
+                tempObjects.forEach((obj) => {
+                    if (mouseX >= obj.x && mouseX <= obj.x+obj.w && mouseY >= obj.y && mouseY <= obj.y+obj.h) {
+                        dragging = false;
+                        console.log("nope- do not.");
+                        console.log(obj.x, obj.y, obj.w, obj.h);
+                    }
+                });
+                if (dragging===true) {
+                    selected = i;
+                    objects[i].x = mouseX - (objects[i].w/2);
+                    objects[i].y = mouseY - (objects[i].h/2);
+                }
+            }
+        }
+        canvas.addEventListener("mousemove", (event) => {
+            if (dragging) {
+                objects[i].x = event.clientX - rect.left - objects[i].w/2;
+                objects[i].y = event.clientY - rect.top - objects[i].h/2;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = objects[i].c;
+                objects.forEach((obj) => {
+                    if (obj.t === "square") {
+                        ctx.fillStyle = obj.c;
+                        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                    } else if (obj.t === "circle") {
+                        ctx.fillStyle = obj.c;
+                        ctx.beginPath();
+                        ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = "blue";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+
+                    ctx.fillStyle = "blue";
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
                 console.log(objects[i].x, objects[i].y);
             }
         });
         canvas.addEventListener("mouseup", () => {
-            dragging = false;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            objects.forEach((obj) => {
-                if (obj.t === "square") {
-                    ctx.fillStyle = obj.c;
-                    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
-                } else if (obj.t === "circle") {
-                    ctx.fillStyle = obj.c;
+            if (dragging) {
+                dragging = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                objects.forEach((obj) => {
+                    if (obj.t === "square") {
+                        ctx.fillStyle = obj.c;
+                        ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                    } else if (obj.t === "circle") {
+                        ctx.fillStyle = obj.c;
+                        ctx.beginPath();
+                        ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = "blue";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+
+                    ctx.fillStyle = "blue";
                     ctx.beginPath();
-                    ctx.arc(obj.x, obj.y, obj.w/2, 0, 2*Math.PI);
+                    ctx.arc(objects[selected].x, objects[selected].y, 5, 0, 2 * Math.PI);
                     ctx.fill();
-                }
-            });
-        });
-        canvas.addEventListener("mouseup", () => {
-            dragging = false;
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(objects[selected].x + objects[selected].w, objects[selected].y + objects[selected].h, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+            }
         });
     });
-    
 }
 document.getElementById("squareBtn").addEventListener("click", async () => {
     newSquare();

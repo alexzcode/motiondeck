@@ -41,12 +41,13 @@
         <main>
             <br>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <input type="file" id="imageInput" class="nav-link" href="#" style="display: none; padding: 0;"
+                    accept=".png,.jpg,.jpeg,.bmp">
+                <input type="file" id="uploadInput" class="nav-link" href="#" style="display: none; width:0;height:0;">
                 <span class="navbar-brand mb-0 h1">Editor</span>
                 <div class="collapse navbar-collapse justify-content-start" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <input type="file" id="uploadInput" class="nav-link" href="#"
-                                style="display: none; width:0;height:0;">
                             <label for="uploadInput" style="cursor: pointer; margin-bottom: 0; margin-top: 10px;"><span
                                     class="icn">upload</span></label>
                         </li>
@@ -54,27 +55,31 @@
                             <a class="nav-link" id="downloadBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">download</span></a>
                         </li>
-                        <div style="margin-right: 10px;"></div>
+                        <div class="vr"
+                            style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;"></div>
                         <li class="nav-item active">
-                            <a class="nav-link" id="titleBtn" style="cursor: pointer; margin-top: 2px;"><span
+                            <a class="nav-link" id="titleBtn"
+                                style="cursor: pointer; margin-top: 2px; width: 16px; padding-left: 0; padding-right: 0;"><span
                                     class="icn">title</span></a>
                         </li>
                         <li class="nav-item active" style="align-items:center;">
-                            <input type="file" id="imageInput" class="nav-link" href="#" style="display: none;"
-                                accept=".png,.jpg,.jpeg,.bmp">
-                            <label for="imageInput" style="cursor: pointer; margin-bottom: 0; margin-top: 10px;"><span
+                            <label for="imageInput"
+                                style="cursor: pointer; margin-bottom: 0; margin-top: 10px; width: 16px; padding-left: 10px;"><span
                                     class="icn">image</span></label>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" id="squareBtn" style="cursor: pointer; margin-top: 2px;"><span
+                            <a class="nav-link" id="squareBtn"
+                                style="cursor: pointer; margin-top: 2px; margin-left: 10px;"><span
                                     class="icn">square</span></a>
                         </li>
-                        <li class="nav-item active" style="width: 16px;">
-                            <a class="nav-link" id="circleBtn" style="cursor: pointer; margin-top: 2px;"><span
+                        <li class="nav-item active" style="width: 16px; height: 44px;">
+                            <a class="nav-link" id="circleBtn"
+                                style="cursor: pointer; margin-top: 2px; height:44px; padding-left:0;"><span
                                     class="icn">circle</span></a>
                         </li>
-                        <div style="margin-right: 10px;"></div>
-                        <li class="nav-item active" style="margin-left: 10px;">
+                        <div class="vr"
+                            style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;"></div>
+                        <li class="nav-item active" style="margin-left: 0;">
                             <a class="nav-link" id="animBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">animation</span></a>
                         </li>
