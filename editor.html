@@ -40,6 +40,7 @@
 
         <main>
             <br>
+            <!-- editor tools/options -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <input type="file" id="uploadInput" class="nav-link" href="#" style="display: none; width:0;height:0;">
                 <span class="navbar-brand mb-0 h1">Editor</span>
@@ -56,7 +57,7 @@
                         <div class="vr"
                             style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;"></div>
                         <li class="nav-item active">
-                            <a class="nav-link" id="titleBtn"
+                            <a class="nav-link" id="titleBtn" data-toggle="modal" data-target="#titleModal"
                                 style="cursor: pointer; margin-top: 2px; width: 16px; padding-left: 0; padding-right: 0;"><span
                                     class="icn">title</span></a>
                         </li>
@@ -76,17 +77,32 @@
                         </li>
                         <div class="vr"
                             style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;"></div>
+                        <li class="nav-item active">
+                            <label for="colorInput" style="cursor: pointer; margin-bottom: 0; margin-top: 10px;"><span
+                                    class="icn">format_color_fill</span></label>
+                            <input type="color" id="colorInput" class="nav-link" style="display: none;">
+                        </li>
+                        <div class="vr"
+                            style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;">
+                        </div>
                         <li class="nav-item active" style="margin-left: 0;">
                             <a class="nav-link" id="animBtn" style="cursor: pointer; margin-top: 2px;"><span
                                     class="icn">animation</span></a>
                         </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="clearBtn"
+                                style="cursor: pointer; margin-top: 2px; padding-left: 0;"><span
+                                    class="icn">cleaning_services</span></a>
+                        </li>
                     </ul>
                 </div>
             </nav>
+            <!-- editor -->
             <section id="editor" class="container bg-light" style="height: 480px; padding: 0;">
                 <canvas id="canvas" width="1100" height="480">
                 </canvas>
             </section>
+            <!-- image modal -->
             <div class="modal fade" id="imgModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -103,6 +119,27 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal"
                                 id="urlConfirm">Insert</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- title/text modal -->
+            <div class="modal fade" id="titleModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Insert Title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" id="titleInput" placeholder="Enter Title Content">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                id="titleConfirm">Insert</button>
                         </div>
                     </div>
                 </div>
