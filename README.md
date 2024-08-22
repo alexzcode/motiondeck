@@ -5,7 +5,7 @@
 MotionDeck is an open-source web app for creating and sharing slideshows, presentations, and animations.\
 It's built with HTML, CSS, and JavaScript, and is free to use and modify.\
 If you would like to contribute to the project, then do it i guess.\
-Visit the website [here](http://alexzcode.github.io/motiondeck) for the website.
+If you'd like to visit the website, you can do so by clicking <a href="http://alexzcode.github.io/motiondeck/" target="_blank">here</a>.
 
 
 
