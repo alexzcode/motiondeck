@@ -78,9 +78,9 @@
                         <div class="vr"
                             style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;"></div>
                         <li class="nav-item active">
-                            <label for="colorInput" style="cursor: pointer; margin-bottom: 0; margin-top: 10px;"><span
-                                    class="icn">format_color_fill</span></label>
-                            <input type="color" id="colorInput" class="nav-link" style="display: none;">
+                            <a class="nav-link" id="colorPickerBtn" data-toggle="modal" data-target="#colorPickerModal"
+                                style="cursor: pointer; margin-top: 2px; width: 16px; padding-left: 0; padding-right: 0;"><span
+                                    class="icn" id="colorPickerIcon">format_color_fill</span></a>
                         </li>
                         <div class="vr"
                             style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;">
@@ -94,13 +94,25 @@
                                 style="cursor: pointer; margin-top: 2px; padding-left: 0;"><span
                                     class="icn">cleaning_services</span></a>
                         </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="deselectBtn"
+                                style="cursor: pointer; margin-top: 2px; padding-left: 0;"><span
+                                    class="icn">deselect</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="presentBtn"
+                                style="cursor: pointer; margin-top: 2px; padding-left: 0;"><span
+                                    class="icn">smart_display</span></a>
+                        </li>
                     </ul>
                 </div>
             </nav>
             <!-- editor -->
-            <section id="editor" class="container bg-light" style="height: 480px; padding: 0;">
-                <canvas id="canvas" width="1100" height="480">
-                </canvas>
+            <section id="editorBg" class="container bg-light" style="height: 540px;">
+                <section id="editor" class="container bg-light border" style="height: 540px; padding: 0; width: 960px;">
+                    <canvas id="canvas" width="960" height="540">
+                    </canvas>
+                </section>
             </section>
             <!-- image modal -->
             <div class="modal fade" id="imgModal" tabindex="-1" role="dialog">
@@ -140,6 +152,28 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-primary" data-dismiss="modal"
                                 id="titleConfirm">Insert</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- color picker modal -->
+            <div class="modal fade" id="colorPickerModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Color Picker</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="colorPickerInput">Choose a color:</label>
+                            <input type="color" class="form-control" id="colorPickerInput" style="padding: 0;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                id="colorPickerConfirm">Confirm</button>
                         </div>
                     </div>
                 </div>
