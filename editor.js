@@ -40,7 +40,8 @@ const ctx = canvas.getContext("2d");
     i = image (only for image)
     v = value (only for title)
 */
-var objects = [];
+var slides = [[]];
+var currentSlide = 0;
 var selected = null;
 var color = "red";
 var presenting = false;
@@ -48,29 +49,25 @@ function newSquare() {
     if (!presenting) {
         var dragging = false;
         var i = 0;
-        objects.forEach(() => {
+        slides[currentSlide].forEach(() => {
             i++;
         });
-        objects.push({x: 10, y: 10, w: 100, h: 100, c: "red", t: "square"});
-        ctx.fillStyle = objects[i].c;
-        ctx.fillRect(objects[i].x, objects[i].y, objects[i].w, objects[i].h);
+        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "red", t: "square"});
+        ctx.fillStyle = slides[currentSlide][i].c;
+        ctx.fillRect(slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
         canvas.addEventListener("mousedown", (event) => {
-            var ogW = objects[i].w;
-            var ogH = objects[i].h;
-            var ogX = objects[i].x;
-            var ogY = objects[i].y;
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (objects[i] && mouseX >= objects[i].x+5 && mouseX <= objects[i].x+objects[i].w-5 && mouseY >= objects[i].y+5 && mouseY <= objects[i].y+objects[i].h-5) {
-                if (i === objects.length-1) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+5 && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w-5 && mouseY >= slides[currentSlide][i].y+5 && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h-5) {
+                if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
-                    objects[i].x = mouseX - (objects[i].w/2);
-                    objects[i].y = mouseY - (objects[i].h/2);
+                    slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                    slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                 } else {
                     var collidingObjects = [];
-                    var tempObjects = [...objects];
+                    var tempObjects = [...slides[currentSlide]];
                     tempObjects.splice(i, 1);
                     dragging = true;
                     tempObjects.forEach((obj) => {
@@ -79,26 +76,26 @@ function newSquare() {
                         }
                     });
                     collidingObjects.forEach((obj) => {
-                        console.log(objects.indexOf(obj), i);
-                        if (objects.indexOf(obj) > i) {
+                        console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
+                        if (slides[currentSlide].indexOf(obj) > i) {
                             dragging = false;
                         }
                     });
                     if (dragging===true) {
                         selected = i;
-                        objects[i].x = mouseX - (objects[i].w/2);
-                        objects[i].y = mouseY - (objects[i].h/2);
+                        slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                        slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                     }
                 }
             }
             canvas.addEventListener("mousemove", (event) => {
                 if (dragging) {
-                    objects[i].x = event.clientX - rect.left - objects[i].w/2;
-                    objects[i].y = event.clientY - rect.top - objects[i].h/2;
+                    slides[currentSlide][i].x = event.clientX - rect.left - slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].y = event.clientY - rect.top - slides[currentSlide][i].h/2;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = objects[i].c;
-                    ctx.fillRect(objects[i].x, objects[i].y, objects[i].w, objects[i].h);
-                    objects.forEach((obj) => {
+                    ctx.fillStyle = slides[currentSlide][i].c;
+                    ctx.fillRect(slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -116,20 +113,20 @@ function newSquare() {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
-                    console.log(i ,objects[i].x, objects[i].y);
+                    console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
                 }
             });
             canvas.addEventListener("mouseup", () => {
                 if (dragging) {
                     dragging = false;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    objects.forEach((obj) => {
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -147,10 +144,10 @@ function newSquare() {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
                 }
@@ -162,27 +159,27 @@ function newCircle() {
     if (!presenting) {
         var dragging = false;
         var i = 0;
-        objects.forEach(() => {
+        slides[currentSlide].forEach(() => {
             i++;
         });
-        objects.push({x: 10, y: 10, w: 100, h: 100, c: "blue", t: "circle"});
-        ctx.fillStyle = objects[i].c;
+        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "blue", t: "circle"});
+        ctx.fillStyle = slides[currentSlide][i].c;
         ctx.beginPath();
-        ctx.arc(objects[i].x + objects[i].w/2, objects[i].y + objects[i].h/2, objects[i].w/2, 0, 2*Math.PI);
+        ctx.arc(slides[currentSlide][i].x + slides[currentSlide][i].w/2, slides[currentSlide][i].y + slides[currentSlide][i].h/2, slides[currentSlide][i].w/2, 0, 2*Math.PI);
         ctx.fill();
         canvas.addEventListener("mousedown", (event) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (objects[i] && mouseX >= objects[i].x && mouseX <= objects[i].x+objects[i].w && mouseY >= objects[i].y && mouseY <= objects[i].y+objects[i].h) {
-                if (i === objects.length-1) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+                if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
-                    objects[i].x = mouseX - (objects[i].w/2);
-                    objects[i].y = mouseY - (objects[i].h/2);
+                    slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                    slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                 } else {
                     var collidingObjects = [];
-                    var tempObjects = [...objects];
+                    var tempObjects = [...slides[currentSlide]];
                     tempObjects.splice(i, 1);
                     dragging = true;
                     tempObjects.forEach((obj) => {
@@ -191,25 +188,25 @@ function newCircle() {
                         }
                     });
                     collidingObjects.forEach((obj) => {
-                        console.log(objects.indexOf(obj), i);
-                        if (objects.indexOf(obj) > i) {
+                        console.log(slides[currentSlide].indexOf(obj), i);
+                        if (slides[currentSlide].indexOf(obj) > i) {
                             dragging = false;
                         }
                     });
                     if (dragging===true) {
                         selected = i;
-                        objects[i].x = mouseX - (objects[i].w/2);
-                        objects[i].y = mouseY - (objects[i].h/2);
+                        slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                        slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                     }
                 }
             }
             canvas.addEventListener("mousemove", (event) => {
                 if (dragging) {
-                    objects[i].x = event.clientX - rect.left - objects[i].w/2;
-                    objects[i].y = event.clientY - rect.top - objects[i].h/2;
+                    slides[currentSlide][i].x = event.clientX - rect.left - slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].y = event.clientY - rect.top - slides[currentSlide][i].h/2;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = objects[i].c;
-                    objects.forEach((obj) => {
+                    ctx.fillStyle = slides[currentSlide][i].c;
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -227,20 +224,20 @@ function newCircle() {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
-                    console.log(objects[i].x, objects[i].y);
+                    console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
                 }
             });
             canvas.addEventListener("mouseup", () => {
                 if (dragging) {
                     dragging = false;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    objects.forEach((obj) => {
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -258,10 +255,10 @@ function newCircle() {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
                 }
@@ -273,28 +270,28 @@ function newImage(url) {
     if (!presenting) {
         var dragging = false;
         var i = 0;
-        objects.forEach(() => {
+        slides[currentSlide].forEach(() => {
             i++;
         });
         var img = new Image();
         img.src = url;
-        objects.push({x: 10, y: 10, w: 100, h: 100, c: "green", t: "image", i: img});
-        objects[i].i.onload = function() {
-            ctx.drawImage(img, objects[i].x, objects[i].y, objects[i].w, objects[i].h);
+        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "green", t: "image", i: img});
+        slides[currentSlide][i].i.onload = function() {
+            ctx.drawImage(img, slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
         }
         canvas.addEventListener("mousedown", (event) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (objects[i] && mouseX >= objects[i].x && mouseX <= objects[i].x+objects[i].w && mouseY >= objects[i].y && mouseY <= objects[i].y+objects[i].h) {
-                if (i === objects.length-1) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+                if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
-                    objects[i].x = mouseX;
-                    objects[i].y = mouseY;
+                    slides[currentSlide][i].x = mouseX;
+                    slides[currentSlide][i].y = mouseY;
                 } else {
                     var collidingObjects = [];
-                    var tempObjects = [...objects];
+                    var tempObjects = [...slides[currentSlide]];
                     tempObjects.splice(i, 1);
                     dragging = true;
                     tempObjects.forEach((obj) => {
@@ -303,24 +300,24 @@ function newImage(url) {
                         }
                     });
                     collidingObjects.forEach((obj) => {
-                        console.log(objects.indexOf(obj), i);
-                        if (objects.indexOf(obj) > i) {
+                        console.log(slides[currentSlide].indexOf(obj), i);
+                        if (slides[currentSlide].indexOf(obj) > i) {
                             dragging = false;
                         }
                     });
                     if (dragging===true) {
                         selected = i;
-                        objects[i].x = mouseX - (objects[i].w/2);
-                        objects[i].y = mouseY - (objects[i].h/2);
+                        slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                        slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                     }
                 }
             }
             canvas.addEventListener("mousemove", (event) => {
                 if (dragging) {
-                    objects[i].x = event.clientX - rect.left - objects[i].w/2;
-                    objects[i].y = event.clientY - rect.top - objects[i].h/2;
+                    slides[currentSlide][i].x = event.clientX - rect.left - slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].y = event.clientY - rect.top - slides[currentSlide][i].h/2;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    objects.forEach((obj) => {
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -338,20 +335,20 @@ function newImage(url) {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
-                    console.log(objects[i].x, objects[i].y);
+                    console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
                 }
             });
             canvas.addEventListener("mouseup", () => {
                 if (dragging) {
                     dragging = false;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    objects.forEach((obj) => {
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -369,10 +366,10 @@ function newImage(url) {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
                 }
@@ -384,26 +381,26 @@ function newTitle(title) {
     if (!presenting) {
         var dragging = false;
         var i = 0;
-        objects.forEach(() => {
+        slides[currentSlide].forEach(() => {
             i++;
         });
-        objects.push({x: 10, y: 10, w: title.length*15, h: 30, t: "title", c: "black", v: title});
-        ctx.fillStyle = objects[i].c;
+        slides[currentSlide].push({x: 10, y: 10, w: title.length*15, h: 30, t: "title", c: "black", v: title});
+        ctx.fillStyle = slides[currentSlide][i].c;
         ctx.font = "30px Arial";
-        ctx.fillText(objects[i].v, objects[i].x, objects[i].y+30);
+        ctx.fillText(slides[currentSlide][i].v, slides[currentSlide][i].x, slides[currentSlide][i].y+30);
         canvas.addEventListener("mousedown", (event) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (objects[i] && mouseX >= objects[i].x && mouseX <= objects[i].x+objects[i].w && mouseY >= objects[i].y && mouseY <= objects[i].y+objects[i].h) {
-                if (i === objects.length-1) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+                if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
-                    objects[i].x = mouseX;
-                    objects[i].y = mouseY;
+                    slides[currentSlide][i].x = mouseX;
+                    slides[currentSlide][i].y = mouseY;
                 } else {
                     var collidingObjects = [];
-                    var tempObjects = [...objects];
+                    var tempObjects = [...slides[currentSlide]];
                     tempObjects.splice(i, 1);
                     dragging = true;
                     tempObjects.forEach((obj) => {
@@ -412,24 +409,24 @@ function newTitle(title) {
                         }
                     });
                     collidingObjects.forEach((obj) => {
-                        console.log(objects.indexOf(obj), i);
-                        if (objects.indexOf(obj) > i) {
+                        console.log(slides[currentSlide].indexOf(obj), i);
+                        if (slides[currentSlide].indexOf(obj) > i) {
                             dragging = false;
                         }
                     });
                     if (dragging===true) {
                         selected = i;
-                        objects[i].x = mouseX - (objects[i].w/2);
-                        objects[i].y = mouseY - (objects[i].h/2);
+                        slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                        slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                     }
                 }
             }
             canvas.addEventListener("mousemove", (event) => {
                 if (dragging) {
-                    objects[i].x = event.clientX - rect.left - objects[i].w/2;
-                    objects[i].y = event.clientY - rect.top - objects[i].h/2;
+                    slides[currentSlide][i].x = event.clientX - rect.left - slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].y = event.clientY - rect.top - slides[currentSlide][i].h/2;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    objects.forEach((obj) => {
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -447,20 +444,20 @@ function newTitle(title) {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
-                    console.log(objects[i].x, objects[i].y);
+                    console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
                 }
             });
             canvas.addEventListener("mouseup", () => {
                 if (dragging) {
                     dragging = false;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    objects.forEach((obj) => {
+                    slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
                             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -478,10 +475,10 @@ function newTitle(title) {
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
                         ctx.fillStyle = "blue";
                         ctx.beginPath();
-                        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
                         ctx.fill();
                     });
                 }
@@ -501,7 +498,7 @@ document.getElementById("urlConfirm").addEventListener("click", async () => {
 });
 document.getElementById("clearBtn").addEventListener("click", async () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    objects = [];
+    slides[currentSlide] = [];
 });
 document.getElementById("titleConfirm").addEventListener("click", async () => {
     var title = document.getElementById("titleInput").value;
@@ -510,7 +507,7 @@ document.getElementById("titleConfirm").addEventListener("click", async () => {
 document.getElementById("deselectBtn").addEventListener("click", async () => {
     selected = null;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    objects.forEach((obj) => {
+    slides[currentSlide].forEach((obj) => {
         if (obj.t === "square") {
             ctx.fillStyle = obj.c;
             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -528,23 +525,24 @@ document.getElementById("deselectBtn").addEventListener("click", async () => {
         }
     });
 });
+// snatched from https://gist.github.com/krabs-github/ec56e4f1c12cddf86ae9c551aa9d9e04
+// thanks lol :))))))))))))
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
     } : null;
-  }  
+}
 document.getElementById("colorPickerConfirm").addEventListener("click", async () => {
     color = document.getElementById("colorPickerInput").value;
     color = hexToRgb(color);
     if (selected!==null)
-        objects[selected].c = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        slides[currentSlide][selected].c = `rgb(${color.r}, ${color.g}, ${color.b})`;
     document.getElementById("colorPickerIcon").style.color = `rgb(${color.r}, ${color.g}, ${color.b})`;
-    console.log(document.getElementById("colorPickerIcon").style.color);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    objects.forEach((obj) => {
+    slides[currentSlide].forEach((obj) => {
         if (obj.t === "square") {
             ctx.fillStyle = obj.c;
             ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -564,18 +562,19 @@ document.getElementById("colorPickerConfirm").addEventListener("click", async ()
     if (selected!==null) {
         ctx.strokeStyle = "blue";
         ctx.lineWidth = 2;
-        ctx.strokeRect(objects[selected].x, objects[selected].y, objects[selected].w, objects[selected].h);
+        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
         ctx.fillStyle = "blue";
         ctx.beginPath();
-        ctx.arc(objects[i].x+objects[i].w/2, objects[i].y+objects[i].h/2, 5, 0, 2*Math.PI);
+        ctx.arc(slides[currentSlide][selected].x+slides[currentSlide][selected].w/2, slides[currentSlide][selected].y+slides[currentSlide][selected].h/2, 5, 0, 2*Math.PI);
         ctx.fill();
     }
+    console.log("%c COLOR CHANGE", `color: rgb(${color.r}, ${color.g}, ${color.b});`);
 });
 document.getElementById("presentBtn").addEventListener("click", async () => {
     if (selected!==null) {
         selected = null;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        objects.forEach((obj) => {
+        slides[currentSlide].forEach((obj) => {
             if (obj.t === "square") {
                 ctx.fillStyle = obj.c;
                 ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
@@ -597,12 +596,20 @@ document.getElementById("presentBtn").addEventListener("click", async () => {
     document.getElementById("editor").requestFullscreen();
     canvas.style.width = "100%";
     canvas.style.height = "100%";
+    console.log("PRESENT ENTER\n presenting:", presenting);
 });
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-        if (presenting) {
-            presenting = false;
-            document.exitFullscreen();
+document.getElementById("editor").addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement) {
+        presenting = false;
+        console.log("PRESENT EXIT\n presenting:", presenting);
+    }
+});
+document.getElementById("debugBtn").addEventListener("click", async () => {
+    console.log("DEBUG INFO\n array: ", slides, "\n current slide: ", currentSlide, "\n selected: ", selected, "\n presenting: ", presenting);
+    if (selected!==null) {
+        console.log("SELECTED OBJ INFO\n x+y:",slides[currentSlide][selected].x, slides[currentSlide][selected].y, "\n w+h:", slides[currentSlide][selected].w, slides[currentSlide][selected].h, "\n color:", slides[currentSlide][selected].c, "\n type:", slides[currentSlide][selected].t);
+        if (slides[currentSlide][selected].t === "title") {
+            console.log("SELECTED OBJ IS OF TYPE TITLE\nTITLE INFO\n value:", slides[currentSlide][selected].v);
         }
     }
 });
