@@ -39,6 +39,7 @@ const ctx = canvas.getContext("2d");
     t = type (square, circle, image, title)
     i = image (only for image)
     v = value (only for title)
+    f = font (only for title)
 */
 var slides = [[]];
 var currentSlide = 0;
@@ -108,7 +109,7 @@ function newSquare() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -139,7 +140,7 @@ function newSquare() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -219,7 +220,7 @@ function newCircle() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -250,7 +251,7 @@ function newCircle() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -330,7 +331,7 @@ function newImage(url) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -361,7 +362,7 @@ function newImage(url) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         }  else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -377,16 +378,16 @@ function newImage(url) {
         });
     }
 }
-function newTitle(title) {
+function newTitle(title, font) {
     if (!presenting) {
         var dragging = false;
         var i = 0;
         slides[currentSlide].forEach(() => {
             i++;
         });
-        slides[currentSlide].push({x: 10, y: 10, w: title.length*15, h: 30, t: "title", c: "black", v: title});
+        slides[currentSlide].push({x: 10, y: 10, w: title.length*15, h: 30, t: "title", c: "black", v: title, f: font});
         ctx.fillStyle = slides[currentSlide][i].c;
-        ctx.font = "30px Arial";
+        ctx.font = `30px ${slides[currentSlide][i].f}`;
         ctx.fillText(slides[currentSlide][i].v, slides[currentSlide][i].x, slides[currentSlide][i].y+30);
         canvas.addEventListener("mousedown", (event) => {
             const rect = canvas.getBoundingClientRect();
@@ -439,7 +440,7 @@ function newTitle(title) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -470,7 +471,7 @@ function newTitle(title) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         }  else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = "30px Arial";
+                            ctx.font = `30px ${obj.f}`;
                             ctx.fillText(obj.v, obj.x, obj.y+30);
                         }
                         ctx.strokeStyle = "blue";
@@ -496,13 +497,37 @@ document.getElementById("urlConfirm").addEventListener("click", async () => {
     var url = document.getElementById("urlInput").value;
     newImage(url);
 });
-document.getElementById("clearBtn").addEventListener("click", async () => {
+document.getElementById("clearConfirm").addEventListener("click", async () => {
+    switch(document.getElementById("clearSelect").value) {
+        case "this":
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            slides[currentSlide] = [];
+            console.log("CURRENT SLIDE CLEAR\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
+            break;
+        case "all":
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            slides.forEach((slide) => {
+                slides[slides.indexOf(slide)] = [];
+            });
+            console.log("ALL SLIDES CLEAR\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
+            break;
+        case "reset":
+            document.getElementById("areYouSureLink").click();
+            console.log("PRESENTATION RESET CONFIRMATION");
+            break;
+        }
+});
+document.getElementById("areYouSureConfirm").addEventListener("click", async () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    slides[currentSlide] = [];
+    currentSlide = 0;
+    slides = [[]];
+    document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
+    console.log("PRESENTATION RESET\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
 });
 document.getElementById("titleConfirm").addEventListener("click", async () => {
     var title = document.getElementById("titleInput").value;
-    newTitle(title);
+    var font = document.getElementById("fontSelect").style.fontFamily;
+    newTitle(title, font);
 });
 document.getElementById("deselectBtn").addEventListener("click", async () => {
     selected = null;
@@ -520,13 +545,11 @@ document.getElementById("deselectBtn").addEventListener("click", async () => {
             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
-            ctx.font = "30px Arial";
+            ctx.font = `30px ${obj.f}`;
             ctx.fillText(obj.v, obj.x, obj.y+30);
         }
     });
 });
-// snatched from https://gist.github.com/krabs-github/ec56e4f1c12cddf86ae9c551aa9d9e04
-// thanks lol :))))))))))))
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -555,7 +578,7 @@ document.getElementById("colorPickerConfirm").addEventListener("click", async ()
             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
-            ctx.font = "30px Arial";
+            ctx.font = `30px ${obj.f}`;
             ctx.fillText(obj.v, obj.x, obj.y+30);
         }
     });
@@ -587,7 +610,7 @@ document.getElementById("presentBtn").addEventListener("click", async () => {
                 ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
-                ctx.font = "30px Arial";
+                ctx.font = `30px ${obj.f}`;
                 ctx.fillText(obj.v, obj.x, obj.y+30);
             }
         });
@@ -604,12 +627,145 @@ document.getElementById("editor").addEventListener("fullscreenchange", () => {
         console.log("PRESENT EXIT\n presenting:", presenting);
     }
 });
+document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+        if (currentSlide>0) {
+            currentSlide--;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            slides[currentSlide].forEach((obj) => {
+                if (obj.t === "square") {
+                    ctx.fillStyle = obj.c;
+                    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                } else if (obj.t === "circle") {
+                    ctx.fillStyle = obj.c;
+                    ctx.beginPath();
+                    ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                    ctx.fill();
+                } else if (obj.t === "image") {
+                    ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                } else if (obj.t === "title") {
+                    ctx.fillStyle = obj.c;
+                    ctx.font = `30px ${obj.f}`;
+                    ctx.fillText(obj.v, obj.x, obj.y+30);
+                }
+            });
+            selected=null;
+            console.log("PREV SLIDE\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
+            document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
+        }
+    } else if (event.key === "ArrowRight") {
+        if (currentSlide<slides.length-1) {
+            currentSlide++;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            slides[currentSlide].forEach((obj) => {
+                if (obj.t === "square") {
+                    ctx.fillStyle = obj.c;
+                    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                } else if (obj.t === "circle") {
+                    ctx.fillStyle = obj.c;
+                    ctx.beginPath();
+                    ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                    ctx.fill();
+                } else if (obj.t === "image") {
+                    ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                } else if (obj.t === "title") {
+                    ctx.fillStyle = obj.c;
+                    ctx.font = `30px ${obj.f}`;
+                    ctx.fillText(obj.v, obj.x, obj.y+30);
+                }
+            });
+            selected=null;
+            console.log("NEXT SLIDE\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
+            document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
+        }
+    }
+});
 document.getElementById("debugBtn").addEventListener("click", async () => {
-    console.log("DEBUG INFO\n array: ", slides, "\n current slide: ", currentSlide, "\n selected: ", selected, "\n presenting: ", presenting);
+    console.log("DEBUG INFO\n array: ", slides, "\n current slide: ", currentSlide, "\n selected: ", selected, "\n presenting: ", presenting, "\n slide array:", slides[currentSlide]);
     if (selected!==null) {
         console.log("SELECTED OBJ INFO\n x+y:",slides[currentSlide][selected].x, slides[currentSlide][selected].y, "\n w+h:", slides[currentSlide][selected].w, slides[currentSlide][selected].h, "\n color:", slides[currentSlide][selected].c, "\n type:", slides[currentSlide][selected].t);
         if (slides[currentSlide][selected].t === "title") {
-            console.log("SELECTED OBJ IS OF TYPE TITLE\nTITLE INFO\n value:", slides[currentSlide][selected].v);
+            console.log("SELECTED OBJ IS OF TYPE TITLE\nTITLE INFO\n value:", slides[currentSlide][selected].v, "\n font:", slides[currentSlide][selected].f);
         }
+    }
+});
+document.getElementById("nextSlideBtn").addEventListener("click", async () => {
+    if (currentSlide===slides.length-1) {
+        slides.push([]);
+    }
+    currentSlide++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    slides[currentSlide].forEach((obj) => {
+        if (obj.t === "square") {
+            ctx.fillStyle = obj.c;
+            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+        } else if (obj.t === "circle") {
+            ctx.fillStyle = obj.c;
+            ctx.beginPath();
+            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+            ctx.fill();
+        } else if (obj.t === "image") {
+            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+        } else if (obj.t === "title") {
+            ctx.fillStyle = obj.c;
+            ctx.font = `30px ${obj.f}`;
+            ctx.fillText(obj.v, obj.x, obj.y+30);
+        }
+    });
+    selected=null;
+    console.log("NEXT SLIDE\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
+    document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
+});
+document.getElementById("prevSlideBtn").addEventListener("click", async () => {
+    if (currentSlide>0) {
+        currentSlide--;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        slides[currentSlide].forEach((obj) => {
+            if (obj.t === "square") {
+                ctx.fillStyle = obj.c;
+                ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+            } else if (obj.t === "circle") {
+                ctx.fillStyle = obj.c;
+                ctx.beginPath();
+                ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                ctx.fill();
+            } else if (obj.t === "image") {
+                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            } else if (obj.t === "title") {
+                ctx.fillStyle = obj.c;
+                ctx.font = `30px ${obj.f}`;
+                ctx.fillText(obj.v, obj.x, obj.y+30);
+            }
+        });
+        console.log("PREV SLIDE\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide), "\n presenting: ", presenting;
+        document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
+    }
+});
+document.getElementById("fontSelect").addEventListener("change", async () => {
+    var font = document.getElementById("fontSelect").value;
+    document.getElementById("fontSelect").style.fontFamily = font;
+});
+document.getElementById("deleteBtn").addEventListener("click", async () => {
+    if (selected!==null) {
+        slides[currentSlide].splice(selected, 1);
+        selected = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        slides[currentSlide].forEach((obj) => {
+            if (obj.t === "square") {
+                ctx.fillStyle = obj.c;
+                ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+            } else if (obj.t === "circle") {
+                ctx.fillStyle = obj.c;
+                ctx.beginPath();
+                ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                ctx.fill();
+            } else if (obj.t === "image") {
+                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            } else if (obj.t === "title") {
+                ctx.fillStyle = obj.c;
+                ctx.font = `30px ${obj.f}`;
+                ctx.fillText(obj.v, obj.x, obj.y+30);
+            }
+        });
     }
 });

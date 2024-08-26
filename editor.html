@@ -82,6 +82,11 @@
                                 style="cursor: pointer; margin-top: 2px; width: 16px; padding-left: 0; padding-right: 0;"><span
                                     class="icn" id="colorPickerIcon">format_color_fill</span></a>
                         </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="deleteBtn"
+                                style="cursor: pointer; margin-top: 2px; padding-right: 0;"><span
+                                    class="icn">delete</span></a>
+                        </li>
                         <div class="vr"
                             style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;">
                         </div>
@@ -90,7 +95,7 @@
                                     class="icn">animation</span></a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" id="clearBtn"
+                            <a class="nav-link" id="clearBtn" data-toggle="modal" data-target="#cleanupModal"
                                 style="cursor: pointer; margin-top: 2px; padding-left: 0;"><span
                                     class="icn">cleaning_services</span></a>
                         </li>
@@ -103,6 +108,21 @@
                             <a class="nav-link" id="presentBtn"
                                 style="cursor: pointer; margin-top: 2px; padding-left: 0;"><span
                                     class="icn">smart_display</span></a>
+                        </li>
+                        <div class="vr"
+                            style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;">
+                        </div>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="prevSlideBtn" style="cursor: pointer; margin-top: 2px;"><span
+                                    class="icn">arrow_back_ios</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="slideCounter"
+                                style="cursor: pointer; margin-top: 2px;"><span>1/1</span></a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" id="nextSlideBtn" style="cursor: pointer; margin-top: 2px;"><span
+                                    class="icn">arrow_forward_ios</span></a>
                         </li>
                         <div class="vr"
                             style="border: rgb(210, 210, 210) 1px solid; margin-left: 10px; margin-right: 10px;">
@@ -154,6 +174,22 @@
                         </div>
                         <div class="modal-body">
                             <input type="text" class="form-control" id="titleInput" placeholder="Enter Title Content">
+                            <br>
+                            <label for="fontSelect">Choose a font:</label>
+                            <select class="form-control" id="fontSelect">
+                                <option value="Arial" style='font-family: "Impact";'>Arial</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Comic Sans MS">Comic Sans MS</option>
+                                <option value="Trebuchet MS">Trebuchet MS</option>
+                                <option value="Arial Black">Arial Black</option>
+                                <option value="Impact">Impact</option>
+                                <option value="Lucida Console">Lucida Console</option>
+                                <option value="Charcoal">Charocal</option>
+                            </select>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -185,6 +221,60 @@
                     </div>
                 </div>
             </div>
+            <!-- cleanup options modal -->
+            <div class="modal fade" id="cleanupModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cleanup Options</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="clearSelect">Choose an option:</label>
+                            <select class="form-control" id="clearSelect">
+                                <option value="this">Clear this slide</option>
+                                <option value="all">Clear all slides</option>
+                                <option value="reset">Reset presentation</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                id="clearConfirm">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- are you sure modal -->
+            <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Are you sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to reset your presentation?</p>
+                            <p>This action cannot be undone.</p>
+                            <ul>
+                                <li>All objects will be deleted.</li>
+                                <li>All slides will be deleted.</li>
+                                <li>The presentation will be reset to its default state.</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                id="areYouSureConfirm">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a data-toggle="modal" data-target="#areYouSureModal" style="display: none;" id="areYouSureLink">link</a>
             <script src="editor.js"></script>
             <br>
         </main>
