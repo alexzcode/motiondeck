@@ -40,6 +40,7 @@ const ctx = canvas.getContext("2d");
     i = image (only for image)
     v = value (only for title)
     f = font (only for title)
+    s = size (only for title)
 */
 var slides = [[]];
 var currentSlide = 0;
@@ -49,6 +50,7 @@ var presenting = false;
 function newSquare() {
     if (!presenting) {
         var dragging = false;
+        var resizing = false;
         var i = 0;
         slides[currentSlide].forEach(() => {
             i++;
@@ -60,7 +62,7 @@ function newSquare() {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+5 && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w-5 && mouseY >= slides[currentSlide][i].y+5 && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h-5) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h && (!(slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) - 5 && mouseX <= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) + 5 && mouseY >= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) - 5 && mouseY <= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) + 5))) {
                 if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
@@ -88,6 +90,44 @@ function newSquare() {
                         slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                     }
                 }
+            } else {
+                if (selected===i) {
+                    if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) - 5 && mouseX <= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) + 5 && mouseY >= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) - 5 && mouseY <= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) + 5) {
+                        resizing = true;
+                        slides[currentSlide][i].w = mouseX - slides[currentSlide][i].x+slides[currentSlide][i].w/2;
+                        slides[currentSlide][i].h = mouseY - slides[currentSlide][i].y+slides[currentSlide][i].h/2;
+                    }
+                } else {
+                    if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+                        if (i === slides[currentSlide].length-1) {
+                            dragging = true;
+                            selected = i;
+                            slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                            slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                        } else {
+                            var collidingObjects = [];
+                            var tempObjects = [...slides[currentSlide]];
+                            tempObjects.splice(i, 1);
+                            dragging = true;
+                            tempObjects.forEach((obj) => {
+                                if (mouseX >= obj.x && mouseX <= obj.x+obj.w && mouseY >= obj.y && mouseY <= obj.y+obj.h) {
+                                    collidingObjects.push(obj);
+                                }
+                            });
+                            collidingObjects.forEach((obj) => {
+                                console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
+                                if (slides[currentSlide].indexOf(obj) > i) {
+                                    dragging = false;
+                                }
+                            });
+                            if (dragging===true) {
+                                selected = i;
+                                slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                                slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                            }
+                        }
+                    }
+                }
             }
             canvas.addEventListener("mousemove", (event) => {
                 if (dragging) {
@@ -95,7 +135,6 @@ function newSquare() {
                     slides[currentSlide][i].y = event.clientY - rect.top - slides[currentSlide][i].h/2;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.fillStyle = slides[currentSlide][i].c;
-                    ctx.fillRect(slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
                     slides[currentSlide].forEach((obj) => {
                         if (obj.t === "square") {
                             ctx.fillStyle = obj.c;
@@ -109,8 +148,8 @@ function newSquare() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -121,6 +160,44 @@ function newSquare() {
                         ctx.fill();
                     });
                     console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
+                } else if (resizing) {
+                    var mouseX = event.clientX - rect.left;
+                    var mouseY = event.clientY - rect.top;
+                    slides[currentSlide][i].w = mouseX - slides[currentSlide][i].x+slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].h = mouseY - slides[currentSlide][i].y+slides[currentSlide][i].h/2;
+                    if (slides[currentSlide][i].w < 25) {
+                        slides[currentSlide][i].w = 25;
+                    }
+                    if (slides[currentSlide][i].h < 25) {
+                        slides[currentSlide][i].h = 25;
+                    }
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = slides[currentSlide][i].c;
+                    slides[currentSlide].forEach((obj) => {
+                        if (obj.t === "square") {
+                            ctx.fillStyle = obj.c;
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "circle") {
+                            ctx.fillStyle = obj.c;
+                            ctx.beginPath();
+                            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                            ctx.fill();
+                        } else if (obj.t === "image") {
+                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "title") {
+                            ctx.fillStyle = obj.c;
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+                        }
+                        ctx.strokeStyle = "blue";
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
+                        ctx.fillStyle = "blue";
+                        ctx.beginPath();
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    });
+                    console.log("OBJ RESIZE\n id:", i ,"\n w+h: ", slides[currentSlide][i].w, slides[currentSlide][i].h);
                 }
             });
             canvas.addEventListener("mouseup", () => {
@@ -140,8 +217,35 @@ function newSquare() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+                        }
+                        ctx.strokeStyle = "blue";
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
+                        ctx.fillStyle = "blue";
+                        ctx.beginPath();
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    });
+                } else if (resizing) {
+                    resizing = false;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    slides[currentSlide].forEach((obj) => {
+                        if (obj.t === "square") {
+                            ctx.fillStyle = obj.c;
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "circle") {
+                            ctx.fillStyle = obj.c;
+                            ctx.beginPath();
+                            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                            ctx.fill();
+                        } else if (obj.t === "image") {
+                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "title") {
+                            ctx.fillStyle = obj.c;
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -159,6 +263,7 @@ function newSquare() {
 function newCircle() {
     if (!presenting) {
         var dragging = false;
+        var resizing = false;
         var i = 0;
         slides[currentSlide].forEach(() => {
             i++;
@@ -172,7 +277,7 @@ function newCircle() {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h && (!(slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) - 5 && mouseX <= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) + 5 && mouseY >= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) - 5 && mouseY <= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) + 5))) {
                 if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
@@ -189,7 +294,7 @@ function newCircle() {
                         }
                     });
                     collidingObjects.forEach((obj) => {
-                        console.log(slides[currentSlide].indexOf(obj), i);
+                        console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
                         if (slides[currentSlide].indexOf(obj) > i) {
                             dragging = false;
                         }
@@ -198,6 +303,44 @@ function newCircle() {
                         selected = i;
                         slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
                         slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                    }
+                }
+            } else {
+                if (selected===i) {
+                    if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) - 5 && mouseX <= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) + 5 && mouseY >= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) - 5 && mouseY <= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) + 5) {
+                        resizing = true;
+                        slides[currentSlide][i].w = mouseX - slides[currentSlide][i].x+slides[currentSlide][i].w/2;
+                        slides[currentSlide][i].h = mouseY - slides[currentSlide][i].y+slides[currentSlide][i].h/2;
+                    }
+                } else {
+                    if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+                        if (i === slides[currentSlide].length-1) {
+                            dragging = true;
+                            selected = i;
+                            slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                            slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                        } else {
+                            var collidingObjects = [];
+                            var tempObjects = [...slides[currentSlide]];
+                            tempObjects.splice(i, 1);
+                            dragging = true;
+                            tempObjects.forEach((obj) => {
+                                if (mouseX >= obj.x && mouseX <= obj.x+obj.w && mouseY >= obj.y && mouseY <= obj.y+obj.h) {
+                                    collidingObjects.push(obj);
+                                }
+                            });
+                            collidingObjects.forEach((obj) => {
+                                console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
+                                if (slides[currentSlide].indexOf(obj) > i) {
+                                    dragging = false;
+                                }
+                            });
+                            if (dragging===true) {
+                                selected = i;
+                                slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                                slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                            }
+                        }
                     }
                 }
             }
@@ -220,8 +363,8 @@ function newCircle() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -232,6 +375,44 @@ function newCircle() {
                         ctx.fill();
                     });
                     console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
+                } else if (resizing) {
+                    var mouseX = event.clientX - rect.left;
+                    var mouseY = event.clientY - rect.top;
+                    slides[currentSlide][i].w = mouseX - slides[currentSlide][i].x+slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].h = mouseY - slides[currentSlide][i].y+slides[currentSlide][i].h/2;
+                    if (slides[currentSlide][i].w < 25) {
+                        slides[currentSlide][i].w = 25;
+                    }
+                    if (slides[currentSlide][i].h < 25) {
+                        slides[currentSlide][i].h = 25;
+                    }
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = slides[currentSlide][i].c;
+                    slides[currentSlide].forEach((obj) => {
+                        if (obj.t === "square") {
+                            ctx.fillStyle = obj.c;
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "circle") {
+                            ctx.fillStyle = obj.c;
+                            ctx.beginPath();
+                            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                            ctx.fill();
+                        } else if (obj.t === "image") {
+                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "title") {
+                            ctx.fillStyle = obj.c;
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+                        }
+                        ctx.strokeStyle = "blue";
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
+                        ctx.fillStyle = "blue";
+                        ctx.beginPath();
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    });
+                    console.log("OBJ RESIZE\n id:", i ,"\n w+h: ", slides[currentSlide][i].w, slides[currentSlide][i].h);
                 }
             });
             canvas.addEventListener("mouseup", () => {
@@ -251,8 +432,35 @@ function newCircle() {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+                        }
+                        ctx.strokeStyle = "blue";
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
+                        ctx.fillStyle = "blue";
+                        ctx.beginPath();
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    });
+                } else if (resizing) {
+                    resizing = false;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    slides[currentSlide].forEach((obj) => {
+                        if (obj.t === "square") {
+                            ctx.fillStyle = obj.c;
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "circle") {
+                            ctx.fillStyle = obj.c;
+                            ctx.beginPath();
+                            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                            ctx.fill();
+                        } else if (obj.t === "image") {
+                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "title") {
+                            ctx.fillStyle = obj.c;
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -270,6 +478,7 @@ function newCircle() {
 function newImage(url) {
     if (!presenting) {
         var dragging = false;
+        var resizing = false;
         var i = 0;
         slides[currentSlide].forEach(() => {
             i++;
@@ -284,12 +493,12 @@ function newImage(url) {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
-            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+            if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h && (!(slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) - 5 && mouseX <= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) + 5 && mouseY >= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) - 5 && mouseY <= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) + 5))) {
                 if (i === slides[currentSlide].length-1) {
                     dragging = true;
                     selected = i;
-                    slides[currentSlide][i].x = mouseX;
-                    slides[currentSlide][i].y = mouseY;
+                    slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                    slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
                 } else {
                     var collidingObjects = [];
                     var tempObjects = [...slides[currentSlide]];
@@ -301,7 +510,7 @@ function newImage(url) {
                         }
                     });
                     collidingObjects.forEach((obj) => {
-                        console.log(slides[currentSlide].indexOf(obj), i);
+                        console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
                         if (slides[currentSlide].indexOf(obj) > i) {
                             dragging = false;
                         }
@@ -310,6 +519,44 @@ function newImage(url) {
                         selected = i;
                         slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
                         slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                    }
+                }
+            } else {
+                if (selected===i) {
+                    if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) - 5 && mouseX <= slides[currentSlide][i].x+(slides[currentSlide][i].w/2) + 5 && mouseY >= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) - 5 && mouseY <= slides[currentSlide][i].y+(slides[currentSlide][i].h/2) + 5) {
+                        resizing = true;
+                        slides[currentSlide][i].w = mouseX - slides[currentSlide][i].x+slides[currentSlide][i].w/2;
+                        slides[currentSlide][i].h = mouseY - slides[currentSlide][i].y+slides[currentSlide][i].h/2;
+                    }
+                } else {
+                    if (slides[currentSlide][i] && mouseX >= slides[currentSlide][i].x && mouseX <= slides[currentSlide][i].x+slides[currentSlide][i].w && mouseY >= slides[currentSlide][i].y && mouseY <= slides[currentSlide][i].y+slides[currentSlide][i].h) {
+                        if (i === slides[currentSlide].length-1) {
+                            dragging = true;
+                            selected = i;
+                            slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                            slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                        } else {
+                            var collidingObjects = [];
+                            var tempObjects = [...slides[currentSlide]];
+                            tempObjects.splice(i, 1);
+                            dragging = true;
+                            tempObjects.forEach((obj) => {
+                                if (mouseX >= obj.x && mouseX <= obj.x+obj.w && mouseY >= obj.y && mouseY <= obj.y+obj.h) {
+                                    collidingObjects.push(obj);
+                                }
+                            });
+                            collidingObjects.forEach((obj) => {
+                                console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
+                                if (slides[currentSlide].indexOf(obj) > i) {
+                                    dragging = false;
+                                }
+                            });
+                            if (dragging===true) {
+                                selected = i;
+                                slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
+                                slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
+                            }
+                        }
                     }
                 }
             }
@@ -331,8 +578,8 @@ function newImage(url) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -343,6 +590,44 @@ function newImage(url) {
                         ctx.fill();
                     });
                     console.log("OBJ MOVE\n id:", i ,"\n x+y: ", slides[currentSlide][i].x, slides[currentSlide][i].y);
+                } else if (resizing) {
+                    var mouseX = event.clientX - rect.left;
+                    var mouseY = event.clientY - rect.top;
+                    slides[currentSlide][i].w = mouseX - slides[currentSlide][i].x+slides[currentSlide][i].w/2;
+                    slides[currentSlide][i].h = mouseY - slides[currentSlide][i].y+slides[currentSlide][i].h/2;
+                    if (slides[currentSlide][i].w < 25) {
+                        slides[currentSlide][i].w = 25;
+                    }
+                    if (slides[currentSlide][i].h < 25) {
+                        slides[currentSlide][i].h = 25;
+                    }
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = slides[currentSlide][i].c;
+                    slides[currentSlide].forEach((obj) => {
+                        if (obj.t === "square") {
+                            ctx.fillStyle = obj.c;
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "circle") {
+                            ctx.fillStyle = obj.c;
+                            ctx.beginPath();
+                            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                            ctx.fill();
+                        } else if (obj.t === "image") {
+                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "title") {
+                            ctx.fillStyle = obj.c;
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+                        }
+                        ctx.strokeStyle = "blue";
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
+                        ctx.fillStyle = "blue";
+                        ctx.beginPath();
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    });
+                    console.log("OBJ RESIZE\n id:", i ,"\n w+h: ", slides[currentSlide][i].w, slides[currentSlide][i].h);
                 }
             });
             canvas.addEventListener("mouseup", () => {
@@ -360,10 +645,37 @@ function newImage(url) {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
-                        }  else if (obj.t === "title") {
+                        } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+                        }
+                        ctx.strokeStyle = "blue";
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(slides[currentSlide][selected].x, slides[currentSlide][selected].y, slides[currentSlide][selected].w, slides[currentSlide][selected].h);
+                        ctx.fillStyle = "blue";
+                        ctx.beginPath();
+                        ctx.arc(slides[currentSlide][i].x+slides[currentSlide][i].w/2, slides[currentSlide][i].y+slides[currentSlide][i].h/2, 5, 0, 2*Math.PI);
+                        ctx.fill();
+                    });
+                } else if (resizing) {
+                    resizing = false;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    slides[currentSlide].forEach((obj) => {
+                        if (obj.t === "square") {
+                            ctx.fillStyle = obj.c;
+                            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "circle") {
+                            ctx.fillStyle = obj.c;
+                            ctx.beginPath();
+                            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                            ctx.fill();
+                        } else if (obj.t === "image") {
+                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                        } else if (obj.t === "title") {
+                            ctx.fillStyle = obj.c;
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -378,17 +690,17 @@ function newImage(url) {
         });
     }
 }
-function newTitle(title, font) {
+function newTitle(title, font, size) {
     if (!presenting) {
         var dragging = false;
         var i = 0;
         slides[currentSlide].forEach(() => {
             i++;
         });
-        slides[currentSlide].push({x: 10, y: 10, w: title.length*15, h: 30, t: "title", c: "black", v: title, f: font});
+        slides[currentSlide].push({x: 10, y: 10, w: title.length*(size/2), h: size, t: "title", c: "black", v: title, f: font, s: size});
         ctx.fillStyle = slides[currentSlide][i].c;
-        ctx.font = `30px ${slides[currentSlide][i].f}`;
-        ctx.fillText(slides[currentSlide][i].v, slides[currentSlide][i].x, slides[currentSlide][i].y+30);
+        ctx.font = `${size}px ${font}`;
+        ctx.fillText(slides[currentSlide][i].v, slides[currentSlide][i].x, slides[currentSlide][i].y+(size/2));
         canvas.addEventListener("mousedown", (event) => {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
@@ -440,8 +752,8 @@ function newTitle(title, font) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -471,8 +783,8 @@ function newTitle(title, font) {
                             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                         }  else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
-                            ctx.font = `30px ${obj.f}`;
-                            ctx.fillText(obj.v, obj.x, obj.y+30);
+                            ctx.font = `${obj.s}px ${obj.f}`;
+                            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                         }
                         ctx.strokeStyle = "blue";
                         ctx.lineWidth = 2;
@@ -526,8 +838,9 @@ document.getElementById("areYouSureConfirm").addEventListener("click", async () 
 });
 document.getElementById("titleConfirm").addEventListener("click", async () => {
     var title = document.getElementById("titleInput").value;
-    var font = document.getElementById("fontSelect").style.fontFamily;
-    newTitle(title, font);
+    var font = document.getElementById("fontSelect").value;
+    var size = document.getElementById("fontSizeInput").value;
+    newTitle(title, font, size);
 });
 document.getElementById("deselectBtn").addEventListener("click", async () => {
     selected = null;
@@ -545,8 +858,8 @@ document.getElementById("deselectBtn").addEventListener("click", async () => {
             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
-            ctx.font = `30px ${obj.f}`;
-            ctx.fillText(obj.v, obj.x, obj.y+30);
+            ctx.font = `${obj.s}px ${obj.f}`;
+            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
         }
     });
 });
@@ -578,8 +891,8 @@ document.getElementById("colorPickerConfirm").addEventListener("click", async ()
             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
-            ctx.font = `30px ${obj.f}`;
-            ctx.fillText(obj.v, obj.x, obj.y+30);
+            ctx.font = `${obj.s}px ${obj.f}`;
+            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
         }
     });
     if (selected!==null) {
@@ -610,8 +923,8 @@ document.getElementById("presentBtn").addEventListener("click", async () => {
                 ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
-                ctx.font = `30px ${obj.f}`;
-                ctx.fillText(obj.v, obj.x, obj.y+30);
+                ctx.font = `${obj.s}px ${obj.f}`;
+                ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
             }
         });
     }
@@ -645,8 +958,8 @@ document.addEventListener("keydown", (event) => {
                     ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
-                    ctx.font = `30px ${obj.f}`;
-                    ctx.fillText(obj.v, obj.x, obj.y+30);
+                    ctx.font = `${obj.s}px ${obj.f}`;
+                    ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                 }
             });
             selected=null;
@@ -670,8 +983,8 @@ document.addEventListener("keydown", (event) => {
                     ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
-                    ctx.font = `30px ${obj.f}`;
-                    ctx.fillText(obj.v, obj.x, obj.y+30);
+                    ctx.font = `${obj.s}px ${obj.f}`;
+                    ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
                 }
             });
             selected=null;
@@ -708,8 +1021,8 @@ document.getElementById("nextSlideBtn").addEventListener("click", async () => {
             ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
-            ctx.font = `30px ${obj.f}`;
-            ctx.fillText(obj.v, obj.x, obj.y+30);
+            ctx.font = `${obj.s}px ${obj.f}`;
+            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
         }
     });
     selected=null;
@@ -733,8 +1046,8 @@ document.getElementById("prevSlideBtn").addEventListener("click", async () => {
                 ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
-                ctx.font = `30px ${obj.f}`;
-                ctx.fillText(obj.v, obj.x, obj.y+30);
+                ctx.font = `${obj.s}px ${obj.f}`;
+                ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
             }
         });
         console.log("PREV SLIDE\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide), "\n presenting: ", presenting;
@@ -763,8 +1076,8 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
                 ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
-                ctx.font = `30px ${obj.f}`;
-                ctx.fillText(obj.v, obj.x, obj.y+30);
+                ctx.font = `${obj.s}px ${obj.f}`;
+                ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
             }
         });
     }
