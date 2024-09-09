@@ -1,32 +1,49 @@
-async function extractPictureFromZip(zipBlob) {
-    const zip = new JSZip();
-    const zipFile = await zip.loadAsync(zipBlob);
+// async function extractPictureFromZip(zipBlob) {
+//     const zip = new JSZip();
+//     const zipFile = await zip.loadAsync(zipBlob);
 
-    const pictureFile = zipFile.file("picture.png");
-    if (pictureFile) {
-        const pictureBlob = await pictureFile.async("blob");
-        return pictureBlob;
-    } else {
-        throw new Error("picture.png not found in the zip file");
-    }
-}
+//     const pictureFile = zipFile.file("picture.png");
+//     if (pictureFile) {
+//         const pictureBlob = await pictureFile.async("blob");
+//         return pictureBlob;
+//     } else {
+//         throw new Error("picture.png not found in the zip file");
+//     }
+// }
 document.getElementById("uploadInput").addEventListener("change", async (event) => {
     const file = event.target.files[0];
-    const pictureBlob = await extractPictureFromZip(file);
-    console.log(pictureBlob);
-    const downloadLink = document.createElement("a");
-    downloadLink.href = URL.createObjectURL(pictureBlob);
-    downloadLink.download = "picture.png";
-    downloadLink.click();
-    downloadLink.remove();
+    slides = JSON.parse(await file.text());
+    currentSlide=0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    slides[currentSlide].forEach((obj) => {
+        if (obj.t === "square") {
+            ctx.fillStyle = obj.c;
+            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+        } else if (obj.t === "circle") {
+            ctx.fillStyle = obj.c;
+            ctx.beginPath();
+            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+            ctx.fill();
+        } else if (obj.t === "image") {
+            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+        } else if (obj.t === "title") {
+            ctx.fillStyle = obj.c;
+            ctx.font = `${obj.s}px ${obj.f}`;
+            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+        }
+    });
+    selected=null;
+    console.log("LOAD PRES\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
+    document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
 });
 document.getElementById("downloadBtn").addEventListener("click", async () => {
     console.log("download button clicked");
     const downloadLink = document.createElement("a");
-    downloadLink.href = URL.createObjectURL(new Blob([Math.random()], { type: "text/plain" }));
-    downloadLink.download = "Hello.txt";
+    downloadLink.href = URL.createObjectURL(new Blob([JSON.stringify(slides)], { type: "text/plain" }));
+    downloadLink.download = "presentation.mdps";
     downloadLink.click();
     downloadLink.remove();
+    console.log("DOWNLOAD PRES\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
 });
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
