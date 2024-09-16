@@ -552,27 +552,6 @@ function newImage(url) {
                             selected = i;
                             slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
                             slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
-                        } else {
-                            var collidingObjects = [];
-                            var tempObjects = [...slides[currentSlide]];
-                            tempObjects.splice(i, 1);
-                            dragging = true;
-                            tempObjects.forEach((obj) => {
-                                if (mouseX >= obj.x && mouseX <= obj.x+obj.w && mouseY >= obj.y && mouseY <= obj.y+obj.h) {
-                                    collidingObjects.push(obj);
-                                }
-                            });
-                            collidingObjects.forEach((obj) => {
-                                console.log("objects interfering with collision, ids:", slides[currentSlide].indexOf(obj), i);
-                                if (slides[currentSlide].indexOf(obj) > i) {
-                                    dragging = false;
-                                }
-                            });
-                            if (dragging===true) {
-                                selected = i;
-                                slides[currentSlide][i].x = mouseX - (slides[currentSlide][i].w/2);
-                                slides[currentSlide][i].y = mouseY - (slides[currentSlide][i].h/2);
-                            }
                         }
                     }
                 }
@@ -1097,5 +1076,32 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
                 ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
             }
         });
+    }
+});
+document.getElementById("deleteSlideBtn").addEventListener("click", async () => {
+    if (slides.length>1) {
+        slides.splice(currentSlide, 1);
+        if (currentSlide>0) {
+            currentSlide--;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        slides[currentSlide].forEach((obj) => {
+            if (obj.t === "square") {
+                ctx.fillStyle = obj.c;
+                ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+            } else if (obj.t === "circle") {
+                ctx.fillStyle = obj.c;
+                ctx.beginPath();
+                ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
+                ctx.fill();
+            } else if (obj.t === "image") {
+                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            } else if (obj.t === "title") {
+                ctx.fillStyle = obj.c;
+                ctx.font = `${obj.s}px ${obj.f}`;
+                ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+            }
+        });
+        document.getElementById("slideCounter").innerHTML = `${currentSlide+1}/${slides.length}`;
     }
 });
