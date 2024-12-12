@@ -692,8 +692,8 @@ function newImage(url) {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -772,8 +772,8 @@ function newTitle(title, font, size) {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -805,8 +805,8 @@ ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         }  else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -882,8 +882,8 @@ document.getElementById("deselectBtn").addEventListener("click", async () => {
             ctx.fill();
         } else if (obj.t === "image") {
             img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+            img.src = obj.i
+            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -917,8 +917,8 @@ document.getElementById("colorPickerConfirm").addEventListener("click", async ()
             ctx.fill();
         } else if (obj.t === "image") {
             img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+            img.src = obj.i
+            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -951,8 +951,8 @@ document.getElementById("presentBtn").addEventListener("click", async () => {
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                img.src = obj.i
+                ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
@@ -988,8 +988,8 @@ document.addEventListener("keydown", (event) => {
                     ctx.fill();
                 } else if (obj.t === "image") {
                     img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                    img.src = obj.i
+                    ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
                     ctx.font = `${obj.s}px ${obj.f}`;
@@ -1015,8 +1015,8 @@ ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                     ctx.fill();
                 } else if (obj.t === "image") {
                     img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                    img.src = obj.i
+                    ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
                     ctx.font = `${obj.s}px ${obj.f}`;
@@ -1055,8 +1055,8 @@ document.getElementById("nextSlideBtn").addEventListener("click", async () => {
             ctx.fill();
         } else if (obj.t === "image") {
             img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+            img.src = obj.i
+            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -1082,8 +1082,8 @@ document.getElementById("prevSlideBtn").addEventListener("click", async () => {
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                img.src = obj.i
+                ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
@@ -1114,8 +1114,8 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                img.src = obj.i
+                ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
@@ -1142,8 +1142,8 @@ document.getElementById("deleteSlideBtn").addEventListener("click", async () => 
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-img.src = obj.i
-ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+                img.src = obj.i
+                ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
