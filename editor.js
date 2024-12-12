@@ -25,7 +25,9 @@ document.getElementById("uploadInput").addEventListener("change", async (event) 
             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
             ctx.fill();
         } else if (obj.t === "image") {
-            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            img = new Image();
+            img.src = obj.i
+            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -162,7 +164,9 @@ function newSquare() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -200,7 +204,9 @@ function newSquare() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -231,7 +237,9 @@ function newSquare() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -258,7 +266,9 @@ function newSquare() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -377,7 +387,9 @@ function newCircle() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -415,7 +427,9 @@ function newCircle() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -446,7 +460,9 @@ function newCircle() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -473,7 +489,9 @@ function newCircle() {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -502,7 +520,7 @@ function newImage(url) {
         });
         var img = new Image();
         img.src = url;
-        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "green", t: "image", i: img});
+        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "green", t: "image", i: url});
         slides[currentSlide][i].i.onload = function() {
             ctx.drawImage(img, slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
         }
@@ -571,7 +589,9 @@ function newImage(url) {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -609,7 +629,9 @@ function newImage(url) {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -640,7 +662,9 @@ function newImage(url) {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+                            img.src = obj.i
+                            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -667,7 +691,9 @@ function newImage(url) {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -745,7 +771,9 @@ function newTitle(title, font, size) {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -776,7 +804,9 @@ function newTitle(title, font, size) {
                             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                             ctx.fill();
                         } else if (obj.t === "image") {
-                            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                            img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         }  else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
                             ctx.font = `${obj.s}px ${obj.f}`;
@@ -851,7 +881,9 @@ document.getElementById("deselectBtn").addEventListener("click", async () => {
             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
             ctx.fill();
         } else if (obj.t === "image") {
-            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -884,7 +916,9 @@ document.getElementById("colorPickerConfirm").addEventListener("click", async ()
             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
             ctx.fill();
         } else if (obj.t === "image") {
-            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -916,7 +950,9 @@ document.getElementById("presentBtn").addEventListener("click", async () => {
                 ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                 ctx.fill();
             } else if (obj.t === "image") {
-                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
@@ -951,7 +987,9 @@ document.addEventListener("keydown", (event) => {
                     ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                     ctx.fill();
                 } else if (obj.t === "image") {
-                    ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                    img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
                     ctx.font = `${obj.s}px ${obj.f}`;
@@ -976,7 +1014,9 @@ document.addEventListener("keydown", (event) => {
                     ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                     ctx.fill();
                 } else if (obj.t === "image") {
-                    ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                    img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
                     ctx.font = `${obj.s}px ${obj.f}`;
@@ -1014,7 +1054,9 @@ document.getElementById("nextSlideBtn").addEventListener("click", async () => {
             ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
             ctx.fill();
         } else if (obj.t === "image") {
-            ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+            img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
             ctx.font = `${obj.s}px ${obj.f}`;
@@ -1039,7 +1081,9 @@ document.getElementById("prevSlideBtn").addEventListener("click", async () => {
                 ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                 ctx.fill();
             } else if (obj.t === "image") {
-                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
@@ -1069,7 +1113,9 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
                 ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                 ctx.fill();
             } else if (obj.t === "image") {
-                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
@@ -1095,7 +1141,9 @@ document.getElementById("deleteSlideBtn").addEventListener("click", async () => 
                 ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
                 ctx.fill();
             } else if (obj.t === "image") {
-                ctx.drawImage(obj.i, obj.x, obj.y, obj.w, obj.h);
+                img = new Image();
+img.src = obj.i
+ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
                 ctx.font = `${obj.s}px ${obj.f}`;
