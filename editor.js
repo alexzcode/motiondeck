@@ -503,7 +503,7 @@ function newCircle(x=10,y=10,w=100,h=100,c="blue",t="circle") {
         });
     }
 }
-function newImage(x=10,y=10,w=100,h=100,c="green",t="image",i="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Question_mark_grey.svg/1170px-Question_mark_grey.svg.png") {
+function newImage(x=10,y=10,w=100,h=100,c="green",t="image",im="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Question_mark_grey.svg/1170px-Question_mark_grey.svg.png") {
     if (!presenting) {
         var dragging = false;
         var resizing = false;
@@ -512,7 +512,7 @@ function newImage(x=10,y=10,w=100,h=100,c="green",t="image",i="https://upload.wi
             i++;
         });
         var img = new Image();
-        img.src = i;
+        img.src = im;
         slides[currentSlide].push({x:x,y:y,w:w,h:h,c:c,t:t,i:i});
         slides[currentSlide][i].i.onload = function() {
             ctx.drawImage(img, slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
@@ -826,7 +826,7 @@ document.getElementById("circleBtn").addEventListener("click", async () => {
 });
 document.getElementById("urlConfirm").addEventListener("click", async () => {
     var url = document.getElementById("urlInput").value;
-    newImage(i=url);
+    newImage(im=url);
 });
 document.getElementById("clearConfirm").addEventListener("click", async () => {
     switch(document.getElementById("clearSelect").value) {
