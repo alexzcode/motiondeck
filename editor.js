@@ -12,26 +12,19 @@
 // }
 document.getElementById("uploadInput").addEventListener("change", async (event) => {
     const file = event.target.files[0];
-    slides = JSON.parse(await file.text());
+    var tempSlides
+    tempSlides = JSON.parse(await file.text());
     currentSlide=0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    slides[currentSlide].forEach((obj) => {
+    tempSlides.forEach((obj) => {
         if (obj.t === "square") {
-            ctx.fillStyle = obj.c;
-            ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+            newSquare(obj.x,obj.y,obj.w,obj.h,obj.c);
         } else if (obj.t === "circle") {
-            ctx.fillStyle = obj.c;
-            ctx.beginPath();
-            ctx.arc(obj.x + obj.w/2, obj.y + obj.h/2, obj.w/2, 0, 2*Math.PI);
-            ctx.fill();
+            newCircle(obj.x,obj.y,obj.w,obj.h,obj.c); 
         } else if (obj.t === "image") {
-            img = new Image();
-            img.src = obj.i
-            ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+            newImage(obj.x,obj.y,obj.w,obj.h,obj.c,t="image",obj.i);
         } else if (obj.t === "title") {
-            ctx.fillStyle = obj.c;
-            ctx.font = `${obj.s}px ${obj.f}`;
-            ctx.fillText(obj.v, obj.x, obj.y+(obj.s/2));
+            newTitle(obj.x,obj.y,obj.v,obj.f,obj.s);
         }
     });
     selected=null;
@@ -66,7 +59,7 @@ var currentSlide = 0;
 var selected = null;
 var color = "red";
 var presenting = false;
-function newSquare() {
+function newSquare(x=10,y=10,w=100,y=100,c="red",t="square") {
     if (!presenting) {
         var dragging = false;
         var resizing = false;
@@ -74,7 +67,7 @@ function newSquare() {
         slides[currentSlide].forEach(() => {
             i++;
         });
-        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "red", t: "square"});
+        slides[currentSlide].push({x: x, y: y, w: w, h: h, c: c, t: t});
         ctx.fillStyle = slides[currentSlide][i].c;
         ctx.fillRect(slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
         canvas.addEventListener("mousedown", (event) => {
@@ -287,7 +280,7 @@ function newSquare() {
         });
     }
 }
-function newCircle() {
+function newCircle(x=10,y=10,w=100,h=100,c="blue",t="circle") {
     if (!presenting) {
         var dragging = false;
         var resizing = false;
@@ -295,7 +288,7 @@ function newCircle() {
         slides[currentSlide].forEach(() => {
             i++;
         });
-        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "blue", t: "circle"});
+        slides[currentSlide].push({x:x,y:y,w:w,h:h,c:c,t:t});
         ctx.fillStyle = slides[currentSlide][i].c;
         ctx.beginPath();
         ctx.arc(slides[currentSlide][i].x + slides[currentSlide][i].w/2, slides[currentSlide][i].y + slides[currentSlide][i].h/2, slides[currentSlide][i].w/2, 0, 2*Math.PI);
@@ -510,7 +503,7 @@ function newCircle() {
         });
     }
 }
-function newImage(url) {
+function newImage(x=10,y=10,w=100,h=100,c="green",t="image",i="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Question_mark_grey.svg/1170px-Question_mark_grey.svg.png") {
     if (!presenting) {
         var dragging = false;
         var resizing = false;
@@ -520,7 +513,7 @@ function newImage(url) {
         });
         var img = new Image();
         img.src = url;
-        slides[currentSlide].push({x: 10, y: 10, w: 100, h: 100, c: "green", t: "image", i: url});
+        slides[currentSlide].push({x:x,y:y,w:w,h:h,c:c,t:t,i:i});
         slides[currentSlide][i].i.onload = function() {
             ctx.drawImage(img, slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
         }
@@ -712,14 +705,14 @@ function newImage(url) {
         });
     }
 }
-function newTitle(title, font, size) {
+function newTitle(x=10,y=10,title,font,size) {
     if (!presenting) {
         var dragging = false;
         var i = 0;
         slides[currentSlide].forEach(() => {
             i++;
         });
-        slides[currentSlide].push({x: 10, y: 10, w: title.length*(size/2), h: size, t: "title", c: "black", v: title, f: font, s: size});
+        slides[currentSlide].push({x:x,y:y, w: title.length*(size/2), h: size, t: "title", c: "black", v: title, f: font, s: size});
         ctx.fillStyle = slides[currentSlide][i].c;
         ctx.font = `${size}px ${font}`;
         ctx.fillText(slides[currentSlide][i].v, slides[currentSlide][i].x, slides[currentSlide][i].y+(size/2));
@@ -833,7 +826,7 @@ document.getElementById("circleBtn").addEventListener("click", async () => {
 });
 document.getElementById("urlConfirm").addEventListener("click", async () => {
     var url = document.getElementById("urlInput").value;
-    newImage(url);
+    newImage(i=url);
 });
 document.getElementById("clearConfirm").addEventListener("click", async () => {
     switch(document.getElementById("clearSelect").value) {
