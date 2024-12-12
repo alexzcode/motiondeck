@@ -512,7 +512,7 @@ function newImage(x=10,y=10,w=100,h=100,c="green",t="image",i="https://upload.wi
             i++;
         });
         var img = new Image();
-        img.src = url;
+        img.src = i;
         slides[currentSlide].push({x:x,y:y,w:w,h:h,c:c,t:t,i:i});
         slides[currentSlide][i].i.onload = function() {
             ctx.drawImage(img, slides[currentSlide][i].x, slides[currentSlide][i].y, slides[currentSlide][i].w, slides[currentSlide][i].h);
