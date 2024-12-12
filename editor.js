@@ -59,7 +59,7 @@ var currentSlide = 0;
 var selected = null;
 var color = "red";
 var presenting = false;
-function newSquare(x=10,y=10,w=100,y=100,c="red",t="square") {
+function newSquare(x=10,y=10,w=100,h=100,c="red",t="square") {
     if (!presenting) {
         var dragging = false;
         var resizing = false;
