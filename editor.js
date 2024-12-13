@@ -12,10 +12,13 @@
 // }
 document.getElementById("uploadInput").addEventListener("change", async (event) => {
     const file = event.target.files[0];
+    console.log(file);
     slides=[[]];
-    var tempSlides = [[]];
-    tempSlides = JSON.parse(await file.text());
+    console.log(slides);
+    var tempSlides = JSON.parse(await file.text());
+    console.log(tempSlides);
     currentSlide=0;
+    console.log(currentSlide);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     tempSlides.array.forEach((slideuhh) => {
         tempSlides[slideuhh].forEach((obj) => {
