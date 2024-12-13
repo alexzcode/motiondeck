@@ -13,11 +13,11 @@
 document.getElementById("uploadInput").addEventListener("change", async (event) => {
     const file = event.target.files[0];
     slides=[[]];
-    var tempSlides
+    var tempSlides = [[]];
     tempSlides = JSON.parse(await file.text());
     currentSlide=0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    tempSlides.forEach((slide) => {
+    tempSlides.array.forEach((slide) => {
         tempSlides[slide].forEach((obj) => {
             if (obj.t === "square") {
                 newSquare(obj.x,obj.y,obj.w,obj.h,obj.c);
