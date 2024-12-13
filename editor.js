@@ -158,7 +158,7 @@ function newSquare(x=10,y=10,w=100,h=100,c="red",t="square") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -198,7 +198,7 @@ function newSquare(x=10,y=10,w=100,h=100,c="red",t="square") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -231,7 +231,7 @@ function newSquare(x=10,y=10,w=100,h=100,c="red",t="square") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -260,7 +260,7 @@ function newSquare(x=10,y=10,w=100,h=100,c="red",t="square") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -381,7 +381,7 @@ function newCircle(x=10,y=10,w=100,h=100,c="blue",t="circle") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -421,7 +421,7 @@ function newCircle(x=10,y=10,w=100,h=100,c="blue",t="circle") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -454,7 +454,7 @@ function newCircle(x=10,y=10,w=100,h=100,c="blue",t="circle") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -483,7 +483,7 @@ function newCircle(x=10,y=10,w=100,h=100,c="blue",t="circle") {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -583,7 +583,7 @@ function newImage(x=10,y=10,w=100,h=100,c="green",t="image",im="https://upload.w
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -623,7 +623,7 @@ function newImage(x=10,y=10,w=100,h=100,c="green",t="image",im="https://upload.w
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -656,7 +656,7 @@ function newImage(x=10,y=10,w=100,h=100,c="green",t="image",im="https://upload.w
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -685,7 +685,7 @@ function newImage(x=10,y=10,w=100,h=100,c="green",t="image",im="https://upload.w
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -765,7 +765,7 @@ function newTitle(x=10,y=10,title,font,size) {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         } else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -798,7 +798,7 @@ function newTitle(x=10,y=10,title,font,size) {
                             ctx.fill();
                         } else if (obj.t === "image") {
                             img = new Image();
-                            img.src = obj.im
+                            img.src = obj.i
                             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                         }  else if (obj.t === "title") {
                             ctx.fillStyle = obj.c;
@@ -875,7 +875,7 @@ document.getElementById("deselectBtn").addEventListener("click", async () => {
             ctx.fill();
         } else if (obj.t === "image") {
             img = new Image();
-            img.src = obj.im
+            img.src = obj.i
             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
@@ -910,7 +910,7 @@ document.getElementById("colorPickerConfirm").addEventListener("click", async ()
             ctx.fill();
         } else if (obj.t === "image") {
             img = new Image();
-            img.src = obj.im
+            img.src = obj.i
             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
@@ -944,7 +944,7 @@ document.getElementById("presentBtn").addEventListener("click", async () => {
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-                img.src = obj.im
+                img.src = obj.i
                 ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
@@ -981,7 +981,7 @@ document.addEventListener("keydown", (event) => {
                     ctx.fill();
                 } else if (obj.t === "image") {
                     img = new Image();
-                    img.src = obj.im
+                    img.src = obj.i
                     ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
@@ -1008,7 +1008,7 @@ document.addEventListener("keydown", (event) => {
                     ctx.fill();
                 } else if (obj.t === "image") {
                     img = new Image();
-                    img.src = obj.im
+                    img.src = obj.i
                     ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
                 } else if (obj.t === "title") {
                     ctx.fillStyle = obj.c;
@@ -1048,7 +1048,7 @@ document.getElementById("nextSlideBtn").addEventListener("click", async () => {
             ctx.fill();
         } else if (obj.t === "image") {
             img = new Image();
-            img.src = obj.im
+            img.src = obj.i
             ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
         } else if (obj.t === "title") {
             ctx.fillStyle = obj.c;
@@ -1075,7 +1075,7 @@ document.getElementById("prevSlideBtn").addEventListener("click", async () => {
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-                img.src = obj.im
+                img.src = obj.i
                 ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
@@ -1107,7 +1107,7 @@ document.getElementById("deleteBtn").addEventListener("click", async () => {
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-                img.src = obj.im
+                img.src = obj.i
                 ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
@@ -1135,7 +1135,7 @@ document.getElementById("deleteSlideBtn").addEventListener("click", async () => 
                 ctx.fill();
             } else if (obj.t === "image") {
                 img = new Image();
-                img.src = obj.im
+                img.src = obj.i
                 ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
             } else if (obj.t === "title") {
                 ctx.fillStyle = obj.c;
