@@ -826,7 +826,7 @@ document.getElementById("circleBtn").addEventListener("click", async () => {
 });
 document.getElementById("urlConfirm").addEventListener("click", async () => {
     var url = document.getElementById("urlInput").value;
-    newImage(im=url);
+    newImage(10,10,100,100,"green","image",url);
 });
 document.getElementById("clearConfirm").addEventListener("click", async () => {
     switch(document.getElementById("clearSelect").value) {
