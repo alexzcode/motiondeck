@@ -17,8 +17,8 @@ document.getElementById("uploadInput").addEventListener("change", async (event) 
     tempSlides = JSON.parse(await file.text());
     currentSlide=0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    tempSlides.array.forEach((slide) => {
-        tempSlides[slide].forEach((obj) => {
+    tempSlides.array.forEach((slideuhh) => {
+        tempSlides[slideuhh].forEach((obj) => {
             if (obj.t === "square") {
                 newSquare(obj.x,obj.y,obj.w,obj.h,obj.c);
             } else if (obj.t === "circle") {
