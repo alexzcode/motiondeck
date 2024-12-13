@@ -12,20 +12,28 @@
 // }
 document.getElementById("uploadInput").addEventListener("change", async (event) => {
     const file = event.target.files[0];
+    slides=[[]];
     var tempSlides
     tempSlides = JSON.parse(await file.text());
     currentSlide=0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    tempSlides.forEach((obj) => {
-        if (obj.t === "square") {
-            newSquare(obj.x,obj.y,obj.w,obj.h,obj.c);
-        } else if (obj.t === "circle") {
-            newCircle(obj.x,obj.y,obj.w,obj.h,obj.c); 
-        } else if (obj.t === "image") {
-            newImage(obj.x,obj.y,obj.w,obj.h,obj.c,t="image",obj.i);
-        } else if (obj.t === "title") {
-            newTitle(obj.x,obj.y,obj.v,obj.f,obj.s);
+    tempSlides.forEach((slide) => {
+        tempSlides[slide].forEach((obj) => {
+            if (obj.t === "square") {
+                newSquare(obj.x,obj.y,obj.w,obj.h,obj.c);
+            } else if (obj.t === "circle") {
+                newCircle(obj.x,obj.y,obj.w,obj.h,obj.c); 
+            } else if (obj.t === "image") {
+                newImage(obj.x,obj.y,obj.w,obj.h,obj.c,t="image",im=obj.i);
+            } else if (obj.t === "title") {
+                newTitle(obj.x,obj.y,obj.v,obj.f,obj.s);
+            }
+        });
+        if (currentSlide===slides.length-1) {
+            slides.push([]);
         }
+        currentSlide++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
     selected=null;
     console.log("LOAD PRES\n array:", slides, "\n slide array: ", slides[currentSlide], "\n current:", currentSlide, "\n presenting: ", presenting);
